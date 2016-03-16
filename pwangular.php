@@ -24,12 +24,17 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 	switch ($input->urlSegment1) {
 
 	    case "sendemail": sendemail(); break;
+
+	    case "prueba": prueba(); break;
 		
 		case "getEmail": getEmail( $_e["from"], $_e["subject"], $_e["message"] ); break;	
 
 		case "searchPages": searchPages( $_e["query"] ); break;			
 	}
 
+	function prueba(  ){
+		echo "prueba".wire('config')->urls->root;
+	}
 
 	/**
 	 * NEEDS wireMail SMTP module to be installed and configured
@@ -57,7 +62,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 		$mail->subject( $subject ); 
 		$mail->bodyHTML($message);
 
-		if( $mail->send() ) echo true; echo false; return;
+		if( $mail->send() ) echo true; echo "fallo no se ha podido enviar"; return;
 	}
 
 
@@ -121,21 +126,24 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 		$u->language = wire('languages')->get("default");
 		$u->save();
 
-		return json_encode( ["name" => $u->name, "password" => $u->pass, "message" => $message,] );
+		echo json_encode( ["name" => $u->name, "password" => $u->pass, "message" => $message,] );
+		return;
 
 	}
 
 	/**
 	 * Busca en paginas de PW 
+	 *  $http.post('/pwangular/searchPages/',{'query': 
+	 *		'template=vehiculo, 
+	 *		title|descripcion_corta*=hormigonera, 
+	 *		marca=MAN, 
+	 *		sort=-blog_fecha, 
+	 *		limit=5, 
+	 *		blog_fecha>='. time()
+	 *	})
 	 * 
-     *     selector = 'template=vehiculo, title|descripcion_corta*=hormigonera, marca=MAN, sort=-blog_fecha, limit=5';
-     *     PW.service('searchPages', {selector: selector})
-     *     .then(function(data){
-     *       console.debug("DATA",data); 
-     *     })   
-	 * 
-	 * @param  [type] $selector 'parent=/agenda/, sort=-blog_fecha, limit=5, blog_fecha>='. time()
-	 * @return [type]           [description]
+	 * @param  [type] 
+	 * @return [type]         
 	 */
 	function searchPages($query) {
 
