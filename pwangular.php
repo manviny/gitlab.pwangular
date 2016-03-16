@@ -27,7 +27,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 		
 		case "getEmail": getEmail( $_e["from"], $_e["subject"], $_e["message"] ); break;	
 
-		case "getEmail": searchPages( $_e["query"] ); break;			
+		case "searchPages": searchPages( $_e["query"] ); break;			
 	}
 
 
@@ -144,10 +144,10 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 			$paginas = wire('pages')->find($query)->toJSON();
 			// $this->session->redirect('http://google.es',false);
 		} catch (Exception $e) {
-			return ("Comprobar que los campos enviados y los de la BD son del mismo tipo INT, TEXT, DATE...");
+			echo ("Comprobar que los campos enviados y los de la BD son del mismo tipo INT, TEXT, DATE...");
 		}
 		
-		return ($paginas);
+		echo $paginas; return;
 
 	}
 
