@@ -25,7 +25,9 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 
 	    case "sendemail": sendemail(); break;
 		
-		case "getEmail": getEmail( $_e["from"], $_e["subject"], $_e["message"] ); break;			
+		case "getEmail": getEmail( $_e["from"], $_e["subject"], $_e["message"] ); break;	
+
+		case "getEmail": searchPages( $_e["query"] ); break;			
 	}
 
 
