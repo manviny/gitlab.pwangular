@@ -33,7 +33,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 	}
 
 	function prueba(  ){
-		echo "prueba".wire('config')->urls->root;
+		echo "Root".wire('config')->urls->root. " urlSegment1 ". $input->urlSegment1;
 	}
 
 	/**
