@@ -23,9 +23,9 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 
 	switch ($input->urlSegment1) {
 
-	    case "sendemail": sendemail(); break;
-
 	    case "prueba": prueba(); break;
+
+	    case "sendEmail": sendEmail( $_e["to"], $_e["subject"], $_e["message"] ); break;
 		
 		case "getEmail": getEmail( $_e["from"], $_e["subject"], $_e["message"] ); break;	
 
@@ -34,6 +34,36 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 
 	function prueba(  ){
 		echo "prueba".wire('config')->urls->root;
+	}
+
+	/**
+	 * NEEDS wireMail SMTP module to be installed and configured
+	 *		https://processwire.com/talk/topic/5704-wiremailsmtp/
+	 *
+	 *		$http.post('/pwangular/getEmail/',{
+	 *				'from': $scope.email, 
+	 *				'subject': $scope.subject, 
+	 *				'message': $scope.message
+	 *		})
+	 */
+	function sendEmail( $to, $subject, $message ){
+
+		//  coje el usuario de la configuración de WireMailSmtp
+		$data = wire('modules')->getModuleConfigData('WireMailSmtp');
+		$me = $data["smtp_user"];
+		
+		$mail = wireMail();
+		if($mail->className != 'WireMailSmtp') {
+		    echo "Debes instalar el módulo WireMailSmtp. Encontrado: {$mail->className}";
+		    return;
+		}
+
+		$mail->from($me)->to($to); 
+		$mail->subject( $subject ); 
+		$mail->bodyHTML($message);
+
+		if( $mail->send() ) { echo true; return; }
+		else { echo "fallo no se ha podido enviar"; return; }
 	}
 
 	/**
@@ -62,7 +92,8 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 		$mail->subject( $subject ); 
 		$mail->bodyHTML($message);
 
-		if( $mail->send() ) echo true; echo "fallo no se ha podido enviar"; return;
+		if( $mail->send() ) { echo true; return; }
+		else { echo "fallo no se ha podido enviar"; return; }
 	}
 
 
