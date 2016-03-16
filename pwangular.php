@@ -21,7 +21,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 	$path = trim($_e['path'],"/");								// ruta absoluta del fichero 
 
 
-	switch ($input->urlSegment1) {
+	switch (wire('input')->urlSegment1) {
 
 	    case "prueba": prueba(); break;
 
@@ -33,7 +33,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 	}
 
 	function prueba(  ){
-		echo "Root".wire('config')->urls->root. " urlSegment1 ". $input->urlSegment1;
+		echo "Root".wire('config')->urls->root. " urlSegment1 ". wire('input')->urlSegment1;
 	}
 
 	/**
