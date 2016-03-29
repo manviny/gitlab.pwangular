@@ -35,7 +35,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 	    case "email_smtp": email_smtp( $smtpHost, $smtpUsername, $smtpPassword, $data  ); break;
 
 	    // Classic Php email
-	    case "email_classic": email_classic( "info@patrimonio24.com", "Patrimonio 24", $data  ); break;
+	    case "email_classic": email_classic( $data  ); break;
 		
 		// WireMailSMTP
 		case "getEmail": getEmail( $data["from"], $data["subject"], $data["message"] ); break;	
@@ -100,10 +100,13 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 
 
 	// classic way
-	function email_classic($from, $from_name, $data){
+	function email_classic($data){
+		$administrador = wire("pages")->find("template=user,roles=superuser");
+		
+		$from =  $administrador->email()[0];
+		$from_name = $administrador->name()[0];
 
-		// $from = $data["from"];
-		// $from_name = $data["from_name"];
+
 		$to = $data["to"];
 		$subject = $data["subject"];
 		$Body = $data["Body"];
