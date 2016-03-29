@@ -30,3 +30,28 @@
 	}
 
 ```
+searchPages
+busca páginas en processwire.
+
+$http.post('/tuweb/pwangular/searchPages/',{'query': 'template=receta'})
+.success(function (result) { 
+       console.log("paginas", result);
+})
+.error(function(data){ console.log(data) }); 
+getEmail
+Recibir en nuestro correo e formulario rellenado por el usuario
+
+$http.post('/tuweb/pwangular/getEmail/',{'from': $scope.email, 'subject': $scope.subject, 'message': $scope.message})
+.success(function (result) { 
+     console.log("email enviado", result);           
+})
+.error(function(data){ console.log(data) }); 
+sendEmail
+$http.post('/pwangular/sendEmail/',{
+       'to': $scope.email, 
+       'subject': 'gracias por contactar con nosotros', 
+       'message': 'nos ponemos en contacto con la mayor brevedad posible'})
+.success(function (result) { 
+        console.log("prueba", result);
+})
+.error(function(data){ console.log(data) }); 
