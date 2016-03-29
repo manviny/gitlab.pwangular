@@ -6,7 +6,7 @@
 </form>
 ```
 ```js
-    var miurl = '/pwangular/;
+    var miurl = '/pwangular/';
 	$scope.suscribir = function(){
 
 		// registra usuario
@@ -33,6 +33,7 @@
 ##searchPages
 busca páginas en processwire.
 ```js
+var miurl = '/pwangular/';
 $http.post(miurl +'searchPages',{'query': 'template=receta'})
 .success(function (result) { 
        console.log("paginas", result);
@@ -41,9 +42,9 @@ $http.post(miurl +'searchPages',{'query': 'template=receta'})
 
 ```
 ##getEmail
-```js
 Recibir en nuestro correo e formulario rellenado por el usuario
-
+```js
+var miurl = '/pwangular/';
 $http.post(miurl +'getEmail',{'from': $scope.email, 'subject': $scope.subject, 'message': $scope.message})
 .success(function (result) { 
      console.log("email enviado", result);           
@@ -53,6 +54,7 @@ $http.post(miurl +'getEmail',{'from': $scope.email, 'subject': $scope.subject, '
 ```
 ##sendEmail
 ```js
+var miurl = '/pwangular/';
 $http.post(miurl +'sendEmail',{
        'to': $scope.email, 
        'subject': 'gracias por contactar con nosotros', 
