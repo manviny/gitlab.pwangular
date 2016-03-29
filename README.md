@@ -19,10 +19,10 @@
 		})
 		.success(function (result) { 
 			// classic Php way
-			$http.post(miurl +'email_classic',{
+			$http.post(miurl +'sendEmail',{
 			       'to': $scope.emailSuscriptor, 
 			       'subject': 'Asunto aquí', 
-			       'Body': '<h4>Cuerpo del mensaje aquí</h4>,'})
+			       'message': '<h4>Cuerpo del mensaje aquí</h4>,'})
 			.success(function (result) { console.log("email", result); }) 
 		})
 		.error(function(data){ console.log(data) }); 
