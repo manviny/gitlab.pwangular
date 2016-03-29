@@ -10,31 +10,119 @@ header("Access-Control-Allow-Origin: {$caller}");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
-
+// require_once("./emails/class.phpmailer.php");
+// require_once("./emails/class.smtp.php");
+// require_once("./emails/phpmailer.lang-es.php");
+// require_once("./emails/mail_config.php");
 
 	//////////////////////////////////////////////////////////////
 	// 					Get post Data
 	//////////////////////////////////////////////////////////////
 
 	$request = file_get_contents('php://input');
-	$_e = json_decode($request,true);
-	$path = trim($_e['path'],"/");								// ruta absoluta del fichero 
+	$data = json_decode($request,true);
+	// $path = trim($data['path'],"/");								// ruta absoluta del fichero 
 
 
 	switch (wire('input')->urlSegment1) {
 
 	    case "prueba": prueba(); break;
 
-	    case "sendEmail": sendEmail( $_e["to"], $_e["subject"], $_e["message"] ); break;
-		
-		case "getEmail": getEmail( $_e["from"], $_e["subject"], $_e["message"] ); break;	
+	    // WireMailSMTP
+	    case "sendEmail": sendEmail( $data["to"], $data["subject"], $data["message"] ); break;
 
-		case "searchPages": searchPages( $_e["query"] ); break;			
+	    // AWS / PhpMailer email
+	    case "email_smtp": email_smtp( $smtpHost, $smtpUsername, $smtpPassword, $data  ); break;
+
+	    // Classic Php email
+	    case "email_classic": email_classic( "info@patrimonio24.com", "Patrimonio 24", $data  ); break;
+		
+		// WireMailSMTP
+		case "getEmail": getEmail( $data["from"], $data["subject"], $data["message"] ); break;	
+
+		case "registerUser": registerUser( $data ); break;	
+
+		case "searchPages": searchPages( $data["query"] ); break;			
 	}
 
 	function prueba(  ){
 		echo "Root".wire('config')->urls->root. " urlSegment1 ". wire('input')->urlSegment1;
 	}
+
+
+	// AWS / PhpMailer email
+	function email_smtp( $smtpHost, $smtpUsername, $smtpPassword, $data ){
+		// $smtpHost, $smtpUsername, $smtpPassword, $from, $from_name, $to, $to_name, $subject, $Body
+
+// echo json_encode($data); return;
+
+		$from = $data["from"];
+		$from_name = $data["from_name"];
+		$to = $data["to"];
+		$to_name = $data["to_name"];
+		$subject = $data["subject"];
+		$Body = $data["Body"];
+
+		//SMTP Settings
+		$mail = new PHPMailer();
+		$mail->CharSet = "UTF-8";
+		$mail->IsSMTP();
+		$mail->SMTPAuth   = true; 
+		$mail->SMTPSecure = "tls"; 
+		$mail->Port 		= "25";
+		$mail->Host       = $smtpHost;
+		$mail->Username   = $smtpUsername;
+		$mail->Password   = $smtpPassword;
+		
+		// From
+		$mail->SetFrom($from, $from_name); //from (verified email address)
+		$mail->addReplyTo($from, $from_name);
+
+		//message
+		$mail->Subject = $subject;
+
+		$mail->Body = $Body;
+		$mail->IsHTML(true);
+		// $mail->addAttachment("img/logo360.png");
+
+		//recipient
+		$mail->AddAddress($to, $to_name); 
+
+
+		//send the message, check for errors
+		if (!$mail->send()) {
+		    echo "Mailer Error: " . $mail->ErrorInfo;
+		} else {
+		    echo $to. "<br>";
+		}
+
+	}
+
+
+	// classic way
+	function email_classic($from, $from_name, $data){
+
+		// $from = $data["from"];
+		// $from_name = $data["from_name"];
+		$to = $data["to"];
+		$subject = $data["subject"];
+		$Body = $data["Body"];
+
+		$from = htmlentities($from_name."<".$from.">");
+
+		$headers = "From: {$from}\n";
+		$headers .= "Reply-To: {$from}\n";
+		// $headers .= "Cc: {$to}\n";
+		// $headers .= "Bcc: {$to}\n";
+		$headers .= "X-Mailer: PHP/".phpversion()."\n";
+		$headers .= "MIME-Version: 1.0\n";
+		$headers .= "Content-Type: text/html; charset=iso-8859-1";
+
+		$result = mail($to, $subject, $Body, $headers);
+
+		echo $result ? 'Message sent!' : 'Mailer Error';
+	}
+
 
 	/**
 	 * NEEDS wireMail SMTP module to be installed and configured
@@ -62,7 +150,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 		$mail->subject( $subject ); 
 		$mail->bodyHTML($message);
 
-		if( $mail->send() ) { echo true; return; }
+		if( $mail->send() ) { echo $me. " ha enviado email sent to ".$to; return; }
 		else { echo "fallo no se ha podido enviar"; return; }
 	}
 
@@ -112,9 +200,14 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 	 * @param  [type] $password2 [description]
 	 * @return [type]            [description]
 	 */
-	function registerUser( $name, $email, $email2, $password, $password2 ){
+	function registerUser( $d ){
 
-		$message = "";
+		$name = $d["name"];
+		$email = $d["email"];
+		$email2 = $d["email2"];
+		$password = $d["password"];
+		$password2 = $d["password2"];
+
 		/**
 		 * Check for spam and last 2 lines to the code
 		 */
@@ -157,7 +250,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 		$u->language = wire('languages')->get("default");
 		$u->save();
 
-		echo json_encode( ["name" => $u->name, "password" => $u->pass, "message" => $message,] );
+		echo json_encode( ["name" => $u->name, "email" => $u->email] );
 		return;
 
 	}
