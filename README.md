@@ -1,3 +1,10 @@
+##suscribir
+```html
+<form class="">
+	<input type="email" name="suscriptor"  ng-model="emailSuscriptor" class="" placeholder="nombre@email.com">
+	<button type="submit" ng-click="suscribir()" class="btn btn-danger">suscribirme</button>
+</form>
+```
 ```js
 
 	$scope.suscribir = function(){
