@@ -6,11 +6,11 @@
 </form>
 ```
 ```js
-
+    var miurl = '/pwangular/;
 	$scope.suscribir = function(){
 
 		// registra usuario
-		$http.post('/pwangular/registerUser/',{
+		$http.post(miurl +'registerUser',{
 		       'name': '', 
 		       'email':$scope.emailSuscriptor, 
 		       'email2':'', 
@@ -19,7 +19,7 @@
 		})
 		.success(function (result) { 
 			// classic Php way
-			$http.post('/pwangular/email_classic/',{
+			$http.post(miurl +'email_classic',{
 			       'to': $scope.emailSuscriptor, 
 			       'subject': 'Asunto aquí', 
 			       'Body': '<h4>Cuerpo del mensaje aquí</h4>,'})
@@ -33,7 +33,7 @@
 ##searchPages
 busca páginas en processwire.
 ```js
-$http.post('/tuweb/pwangular/searchPages/',{'query': 'template=receta'})
+$http.post(miurl +'searchPages',{'query': 'template=receta'})
 .success(function (result) { 
        console.log("paginas", result);
 })
@@ -44,7 +44,7 @@ $http.post('/tuweb/pwangular/searchPages/',{'query': 'template=receta'})
 ```js
 Recibir en nuestro correo e formulario rellenado por el usuario
 
-$http.post('/tuweb/pwangular/getEmail/',{'from': $scope.email, 'subject': $scope.subject, 'message': $scope.message})
+$http.post(miurl +'getEmail',{'from': $scope.email, 'subject': $scope.subject, 'message': $scope.message})
 .success(function (result) { 
      console.log("email enviado", result);           
 })
@@ -53,7 +53,7 @@ $http.post('/tuweb/pwangular/getEmail/',{'from': $scope.email, 'subject': $scope
 ```
 ##sendEmail
 ```js
-$http.post('/pwangular/sendEmail/',{
+$http.post(miurl +'sendEmail',{
        'to': $scope.email, 
        'subject': 'gracias por contactar con nosotros', 
        'message': 'nos ponemos en contacto con la mayor brevedad posible'})
