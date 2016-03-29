@@ -38,8 +38,9 @@ $http.post('/tuweb/pwangular/searchPages/',{'query': 'template=receta'})
        console.log("paginas", result);
 })
 .error(function(data){ console.log(data) }); 
-##getEmail
+
 ```
+##getEmail
 ```js
 Recibir en nuestro correo e formulario rellenado por el usuario
 
@@ -48,8 +49,9 @@ $http.post('/tuweb/pwangular/getEmail/',{'from': $scope.email, 'subject': $scope
      console.log("email enviado", result);           
 })
 .error(function(data){ console.log(data) }); 
-##sendEmail
+
 ```
+##sendEmail
 ```js
 $http.post('/pwangular/sendEmail/',{
        'to': $scope.email, 
